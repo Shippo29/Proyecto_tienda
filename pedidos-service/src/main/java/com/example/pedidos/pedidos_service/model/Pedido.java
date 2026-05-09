@@ -24,13 +24,6 @@ public class Pedido {
 
     private Integer cantidad;
 
-    public Object getTotal() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTotal'");
-    }
-
-    public void setTotal(Object total) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setTotal'");
-    }
+    private Double total;
 }
+
