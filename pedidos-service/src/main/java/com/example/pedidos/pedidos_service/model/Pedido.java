@@ -2,6 +2,7 @@ package com.example.pedidos.pedidos_service.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "pedidos")
@@ -24,13 +25,5 @@ public class Pedido {
 
     private Integer cantidad;
 
-    public Object getTotal() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTotal'");
-    }
-
-    public void setTotal(Object total) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setTotal'");
-    }
+    private BigDecimal total;
 }
