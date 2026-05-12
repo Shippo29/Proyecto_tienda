@@ -16,5 +16,7 @@ public interface PedidoService {
 
     Pedido actualizarPedido(Long id, Pedido pedido);
 
+    Pedido actualizarEstadoPedido(Long id, String estado, String direccion);
+
     void eliminarPedido(Long id);
 }
