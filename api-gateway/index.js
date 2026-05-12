@@ -58,16 +58,16 @@ function createProxy(target, pathRewrite) {
 
 // Proxy routes
 app.use(
-  "/productos",
-  createProxy("http://localhost:8081", { "^/productos": "/productos" }),
+  "/api/v1/productos",
+  createProxy("http://localhost:8081", { "^/api/v1/productos": "/api/v1/productos" }),
 );
 app.use(
-  "/pedidos",
-  createProxy("http://localhost:8082", { "^/pedidos": "/pedidos" }),
+  "/api/v1/pedidos",
+  createProxy("http://localhost:8082", { "^/api/v1/pedidos": "/api/v1/pedidos" }),
 );
 app.use(
-  "/envios",
-  createProxy("http://localhost:8083", { "^/envios": "/envios" }),
+  "/api/v1/envios",
+  createProxy("http://localhost:8083", { "^/api/v1/envios": "/api/v1/envios" }),
 );
 
 app.listen(PORT, () => {
