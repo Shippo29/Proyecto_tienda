@@ -5,11 +5,11 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// CORS for Vite dev
+// CORS para desarrollo con Vite
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
 
-// Logging middleware (detailed for dev)
+// Middleware de registro (detallado para desarrollo)
 app.use((req, res, next) => {
   try {
     if (req.method === "GET") {
@@ -56,7 +56,7 @@ function createProxy(target, pathRewrite) {
   });
 }
 
-// Proxy routes
+// Rutas de proxy
 app.use(
   "/productos",
   createProxy("http://localhost:8081", { "^/productos": "/productos" }),

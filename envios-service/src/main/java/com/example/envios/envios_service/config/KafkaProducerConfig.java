@@ -1,4 +1,4 @@
-package com.example.pedidos.pedidos_service.config;
+package com.example.envios.envios_service.config;
 
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;

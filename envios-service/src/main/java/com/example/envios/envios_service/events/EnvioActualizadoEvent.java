@@ -1,0 +1,15 @@
+package com.example.envios.envios_service.events;
+
+import lombok.*;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class EnvioActualizadoEvent {
+    private Long envioId;
+    private Long pedidoId;
+    private String direccion;
+    private String estado;
+    private java.time.Instant updatedAt;
+}

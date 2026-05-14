@@ -5,7 +5,7 @@ const api = axios.create({
   timeout: parseInt(import.meta.env.VITE_API_TIMEOUT || "10000", 10),
 });
 
-// Debugging interceptors (dev only)
+// Interceptores de depuración (solo en desarrollo)
 api.interceptors.request.use((config) => {
   try {
     console.debug("FRONTEND DEBUG -> Request", {
