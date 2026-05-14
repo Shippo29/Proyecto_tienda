@@ -96,7 +96,7 @@ $inventarioPath = Join-Path $ScriptDir 'inventario-service'
 $pedidosPath   = Join-Path $ScriptDir 'pedidos-service'
 $enviosPath    = Join-Path $ScriptDir 'envios-service'
 $gatewayPath   = Join-Path $ScriptDir 'api-gateway'
-$frontendPath  = Join-Path $ScriptDir 'frontend'
+$frontendPath  = Join-Path $ScriptDir 'frontend\frontend'
 
 # Lista para almacenar procesos
 $processes = @()
@@ -123,29 +123,13 @@ if (Test-Path $enviosPath) {
     $processes += @{ name='envios-service'; pid=$pidEnvios }
 } else { Write-Host "[WARN] envios-service no encontrado en $enviosPath" -ForegroundColor Yellow }
 
-# Instalar dependencias y arrancar api-gateway (Node)
-if (Test-Path $gatewayPath) {
-    if (-not (Test-Path (Join-Path $gatewayPath 'node_modules'))) {
-        Write-Host "api-gateway: node_modules no encontrado -> ejecutando npm install (puede tardar)..."
-        Start-Process -FilePath 'npm' -ArgumentList 'install' -WorkingDirectory $gatewayPath -NoNewWindow -Wait
-    }
-    $pidGateway = Start-NewTerminalProcess 'api-gateway' $gatewayPath "npm start"
-    $processes += @{ name='api-gateway'; pid=$pidGateway }
-} else {
-    Write-Host "[WARN] api-gateway no encontrado en $gatewayPath" -ForegroundColor Yellow
-}
+# api-gateway
+Write-Host "api-gateway: ejecutando npm install..."
+Start-Process -FilePath 'npm' -ArgumentList 'install' -WorkingDirectory $gatewayPath -NoNewWindow -Wait
 
-# Instalar dependencias y arrancar frontend (Vite)
-if (Test-Path $frontendPath) {
-    if (-not (Test-Path (Join-Path $frontendPath 'node_modules'))) {
-        Write-Host "frontend: node_modules no encontrado -> ejecutando npm install (puede tardar)..."
-        Start-Process -FilePath 'npm' -ArgumentList 'install' -WorkingDirectory $frontendPath -NoNewWindow -Wait
-    }
-    $pidFrontend = Start-NewTerminalProcess 'frontend' $frontendPath "npm run dev"
-    $processes += @{ name='frontend'; pid=$pidFrontend }
-} else {
-    Write-Host "[WARN] frontend no encontrado en $frontendPath" -ForegroundColor Yellow
-}
+# frontend
+Write-Host "frontend: ejecutando npm install..."
+Start-Process -FilePath 'npm' -ArgumentList 'install' -WorkingDirectory $frontendPath -NoNewWindow -Wait
 
 # Guardar PIDs en archivo para stop script
 $pidFile = Join-Path $ScriptDir '.run_all_processes.json'

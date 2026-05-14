@@ -25,6 +25,13 @@ public class PedidoCreatedListener {
             .findFirst()
             .ifPresentOrElse(p -> {
                 log.info("InventarioService - Found product id={} nombre={} stock={} for pedidoId={}", p.getId(), p.getNombre(), p.getStock(), event.getPedidoId());
+
+                if (p.getStock() < event.getCantidad()) {
+                    log.warn("InventarioService - Stock insuficiente para productoId={} (stock={}, pedido={}). Pedido ignorado.",
+                            p.getId(), p.getStock(), event.getCantidad());
+                    return;
+                }
+
                 int newStock = p.getStock() - event.getCantidad();
                 log.info("InventarioService - Decrementing stock for productoId={} by {} -> newStock={}", p.getId(), event.getCantidad(), newStock);
                 p.setStock(newStock);
