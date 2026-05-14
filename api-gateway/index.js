@@ -36,19 +36,19 @@ function createProxy(target, pathRewrite) {
     target,
     changeOrigin: true,
     pathRewrite,
-    onProxyReq: (proxyReq, req, res) => {
-      try {
-        console.log(`[API-GATEWAY] Proxying request -> ${req.method} ${req.originalUrl} -> ${target}${req.originalUrl}`);
+    on: {
+      proxyReq: (proxyReq, req) => {
         if (req.body && Object.keys(req.body).length > 0) {
-          console.log("[API-GATEWAY] ProxyReq body:", JSON.stringify(req.body));
+          const bodyData = JSON.stringify(req.body);
+          proxyReq.setHeader('Content-Type', 'application/json');
+          proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+          proxyReq.write(bodyData);
         }
-      } catch (e) {
-        console.log("[API-GATEWAY] onProxyReq debug error", e);
+      },
+      proxyRes: (proxyRes, req) => {
+        console.log(`[API-GATEWAY] ${req.method} ${req.originalUrl} -> ${proxyRes.statusCode}`);
       }
-    },
-    onProxyRes: (proxyRes, req, res) => {
-      console.log(`[API-GATEWAY] Proxy response from target for ${req.originalUrl} status=${proxyRes.statusCode}`);
-    },
+    }
   });
 }
 

@@ -124,12 +124,8 @@ if (Test-Path $enviosPath) {
 } else { Write-Host "[WARN] envios-service no encontrado en $enviosPath" -ForegroundColor Yellow }
 
 # api-gateway
-Write-Host "api-gateway: ejecutando npm install..."
-Start-Process -FilePath 'npm' -ArgumentList 'install' -WorkingDirectory $gatewayPath -NoNewWindow -Wait
-
-# frontend
-Write-Host "frontend: ejecutando npm install..."
-Start-Process -FilePath 'npm' -ArgumentList 'install' -WorkingDirectory $frontendPath -NoNewWindow -Wait
+Start-Process -FilePath 'cmd.exe' -ArgumentList '/c npm install' -WorkingDirectory "ruta\al\api-gateway"
+Start-Process -FilePath 'cmd.exe' -ArgumentList '/c npm install' -WorkingDirectory "ruta\al\frontend\frontend"
 
 # Guardar PIDs en archivo para stop script
 $pidFile = Join-Path $ScriptDir '.run_all_processes.json'

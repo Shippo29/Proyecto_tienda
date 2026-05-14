@@ -1,22 +1,14 @@
 ﻿[
     {
         "name":  "inventario-service",
-        "pid":  30468
+        "pid":  8100
     },
     {
         "name":  "pedidos-service",
-        "pid":  29464
+        "pid":  19372
     },
     {
         "name":  "envios-service",
-        "pid":  6216
-    },
-    {
-        "name":  "api-gateway",
-        "pid":  7012
-    },
-    {
-        "name":  "frontend",
-        "pid":  9452
+        "pid":  30500
     }
 ]

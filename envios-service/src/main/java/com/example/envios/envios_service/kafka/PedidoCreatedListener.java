@@ -22,7 +22,7 @@ public class PedidoCreatedListener {
 
         Envio envio = new Envio();
         envio.setPedidoId(event.getPedidoId());
-        envio.setDireccion("Por definir");
+        envio.setDireccion("Pendiente de confirmar - Cliente: " + event.getCliente());
         envio.setEstado("CREADO");
 
         log.info("EnviosService - Creating Envio for pedidoId={}", event.getPedidoId());
