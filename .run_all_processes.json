@@ -1,14 +1,14 @@
 ﻿[
     {
         "name":  "inventario-service",
-        "pid":  8100
+        "pid":  8264
     },
     {
         "name":  "pedidos-service",
-        "pid":  19372
+        "pid":  22332
     },
     {
         "name":  "envios-service",
-        "pid":  30500
+        "pid":  11980
     }
 ]
