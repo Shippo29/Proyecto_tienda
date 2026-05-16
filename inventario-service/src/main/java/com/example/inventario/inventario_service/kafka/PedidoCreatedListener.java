@@ -7,6 +7,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -16,6 +17,7 @@ public class PedidoCreatedListener {
     private final ProductoRepository productoRepository;
 
     @KafkaListener(topics = "pedidos.created", groupId = "inventario-group", containerFactory = "kafkaListenerContainerFactory")
+    @Transactional
     public void handlePedidoCreado(PedidoCreadoEvent event) {
         log.debug("InventarioService - Full event payload: {}", event);
         log.info("InventarioService - Received PedidoCreadoEvent: pedidoId={} producto={} cantidad={}", event.getPedidoId(), event.getProducto(), event.getCantidad());

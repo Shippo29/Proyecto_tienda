@@ -13,6 +13,7 @@ export default function Header() {
         Crear Pedido
       </Link>
       <Link to="/envios">Envíos</Link>
+      <Link to="/pedidos" style={{ marginRight: 12 }}>Pedidos</Link>
     </header>
   );
 }
