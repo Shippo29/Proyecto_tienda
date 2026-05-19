@@ -1,0 +1,18 @@
+.create-order-page {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.page-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.create-order-page h1 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 32px;
+  font-size: 28px;
+}
