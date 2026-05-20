@@ -1,6 +1,7 @@
 import React from "react";
 import { getShipments } from "../services/shipmentService";
 import ShipmentCard from "../components/Shipment/ShipmentCard";
+import PageHeader from "../components/common/PageHeader";
 import { PageStateContainer } from "../components/common/PageStates";
 import { useFetch } from "../hooks/useFetch";
 import { useApp } from "../hooks/useApp";
@@ -16,12 +17,13 @@ export default function ShipmentsPage() {
 
   return (
     <div className="page-wrapper">
-      <div className="page-header">
-        <h1>🚚 Envíos</h1>
-        <button onClick={refetch} disabled={loading} className="btn-reload">
-          {loading ? "Cargando..." : "🔄 Recargar"}
-        </button>
-      </div>
+      <PageHeader
+        icon="🚚"
+        title="Envíos"
+        actionLabel="🔄 Recargar"
+        onAction={refetch}
+        actionDisabled={loading}
+      />
 
       <PageStateContainer
         loading={loading && !shipments?.length}

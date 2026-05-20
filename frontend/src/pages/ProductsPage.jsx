@@ -1,6 +1,7 @@
 import React from "react";
 import { getProducts } from "../services/productService";
 import ProductCard from "../components/Product/ProductCard";
+import PageHeader from "../components/common/PageHeader";
 import { PageStateContainer } from "../components/common/PageStates";
 import { useFetch } from "../hooks/useFetch";
 import { useApp } from "../hooks/useApp";
@@ -16,12 +17,13 @@ export default function ProductsPage() {
 
   return (
     <div className="page-wrapper">
-      <div className="page-header">
-        <h1>📦 Productos</h1>
-        <button onClick={refetch} disabled={loading} className="btn-reload">
-          {loading ? "Cargando..." : "🔄 Recargar"}
-        </button>
-      </div>
+      <PageHeader
+        icon="📦"
+        title="Productos"
+        actionLabel="🔄 Recargar"
+        onAction={refetch}
+        actionDisabled={loading}
+      />
 
       <PageStateContainer
         loading={loading && !products?.length}

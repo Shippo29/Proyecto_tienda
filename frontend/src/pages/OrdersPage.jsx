@@ -1,5 +1,6 @@
 import React from "react";
 import { getOrders } from "../services/orderService";
+import PageHeader from "../components/common/PageHeader";
 import { PageStateContainer } from "../components/common/PageStates";
 import { useFetch } from "../hooks/useFetch";
 import { useApp } from "../hooks/useApp";
@@ -15,12 +16,13 @@ export default function OrdersPage() {
 
   return (
     <div className="page-wrapper">
-      <div className="page-header">
-        <h1>📋 Pedidos</h1>
-        <button onClick={refetch} disabled={loading} className="btn-reload">
-          {loading ? "Cargando..." : "🔄 Recargar"}
-        </button>
-      </div>
+      <PageHeader
+        icon="📋"
+        title="Pedidos"
+        actionLabel="🔄 Recargar"
+        onAction={refetch}
+        actionDisabled={loading}
+      />
 
       <PageStateContainer
         loading={loading && !orders?.length}

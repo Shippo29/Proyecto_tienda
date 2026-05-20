@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import OrderForm from "../components/Order/OrderForm";
+import PageHeader from "../components/common/PageHeader";
 import { createOrder } from "../services/orderService";
 import { useApp } from "../hooks/useApp";
 import "./CreateOrderPage.css";
@@ -36,7 +37,7 @@ export default function CreateOrderPage() {
   return (
     <div className="create-order-page">
       <div className="page-container">
-        <h1>➕ Crear Nuevo Pedido</h1>
+        <PageHeader icon="➕" title="Crear Nuevo Pedido" />
         <OrderForm onSubmit={handleSubmit} onCancel={handleCancel} />
       </div>
     </div>
