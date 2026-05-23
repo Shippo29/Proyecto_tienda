@@ -1,8 +1,6 @@
-// API Configuration
 export const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || "http://localhost:8080";
 export const API_TIMEOUT = parseInt(import.meta.env.VITE_API_TIMEOUT || "10000", 10);
 
-// Routes
 export const ROUTES = {
   HOME: "/",
   PRODUCTS: "/",
@@ -11,14 +9,12 @@ export const ROUTES = {
   SHIPMENTS: "/envios",
 };
 
-// API Endpoints
 export const API_ENDPOINTS = {
   PRODUCTS: "/productos",
   ORDERS: "/pedidos",
   SHIPMENTS: "/envios",
 };
 
-// Error Messages
 export const ERROR_MESSAGES = {
   FETCH_PRODUCTS: "Error al cargar productos",
   FETCH_ORDERS: "Error al cargar pedidos",
