@@ -21,6 +21,14 @@ export default function OrderForm({ onSubmit, onCancel, initial = {} }) {
     loadProducts();
   }, []);
 
+  // Recalcular total automáticamente cuando cambia producto o cantidad
+  useEffect(() => {
+    if (selectedProduct) {
+      const total = parseFloat(selectedProduct.precio || 0) * form.cantidad;
+      setForm((prev) => ({ ...prev, total: parseFloat(total.toFixed(2)) }));
+    }
+  }, [selectedProduct, form.cantidad]);
+
   const loadProducts = async () => {
     try {
       setLoading(true);
@@ -62,26 +70,23 @@ export default function OrderForm({ onSubmit, onCancel, initial = {} }) {
     const { name, value } = e.target;
     let newValue = value;
 
-    if (name === "cantidad" || name === "total") {
-      newValue = value === "" ? 0 : Number(value);
+    if (name === "cantidad") {
+      newValue = value === "" ? 1 : Math.max(1, Number(value));
     }
 
     if (name === "producto") {
       const product = products.find((p) => p.nombre === value);
       setSelectedProduct(product || null);
+      if (!product) {
+        setForm((prev) => ({ ...prev, producto: value, total: 0 }));
+        return;
+      }
     }
 
-    setForm((prev) => ({
-      ...prev,
-      [name]: newValue,
-    }));
+    setForm((prev) => ({ ...prev, [name]: newValue }));
 
-    // Clear error for this field when user starts typing
     if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
@@ -96,6 +101,8 @@ export default function OrderForm({ onSubmit, onCancel, initial = {} }) {
     setIsSubmitting(true);
     try {
       await onSubmit(form);
+    } catch (err) {
+      // El error ya lo maneja el padre; no mostramos nada extra aquí
     } finally {
       setIsSubmitting(false);
     }
@@ -164,19 +171,18 @@ export default function OrderForm({ onSubmit, onCancel, initial = {} }) {
         </div>
 
         <div className="form-group">
-          <label htmlFor="total">Total ($) *</label>
+          <label htmlFor="total">Total ($)</label>
           <input
             id="total"
             type="number"
             step="0.01"
             name="total"
             value={form.total}
-            onChange={handleChange}
+            readOnly
+            disabled
             placeholder="0.00"
-            className={errors.total ? "error" : ""}
-            required
+            style={{ backgroundColor: "#f0f4f8", fontWeight: "600", color: "#2c3e50" }}
           />
-          {errors.total && <span className="error-message">{errors.total}</span>}
         </div>
       </div>
 
