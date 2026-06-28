@@ -1,9 +1,28 @@
 import api from "./api";
+import { requestApi } from "./apiUtils";
+import { API_ENDPOINTS, ERROR_MESSAGES } from "../utils/constants";
 
-export const getProducts = () => api.get("/api/v1/productos");
-export const getProductById = (id) => api.get(`/api/v1/productos/${id}`);
-export const createProduct = (product) => api.post("/api/v1/productos", product);
-export const updateProduct = (id, product) => api.put(`/api/v1/productos/${id}`, product);
-export const deleteProduct = (id) => api.delete(`/api/v1/productos/${id}`);
+/**
+ * Obtiene la lista de productos
+ */
+export const getProducts = async () => {
+  return requestApi(
+    () => api.get(API_ENDPOINTS.PRODUCTS),
+    ERROR_MESSAGES.FETCH_PRODUCTS,
+  ).then((data) => data || []);
+};
 
-export default { getProducts, getProductById, createProduct, updateProduct, deleteProduct };
+/**
+ * Obtiene un producto por ID
+ */
+export const getProductById = async (id) => {
+  return requestApi(
+    () => api.get(`${API_ENDPOINTS.PRODUCTS}/${id}`),
+    `Error al cargar producto ${id}`,
+  );
+};
+
+export default {
+  getProducts,
+  getProductById,
+};

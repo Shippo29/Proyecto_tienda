@@ -1,40 +1,34 @@
 package com.example.pedidos.pedidos_service.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.*;
 import java.math.BigDecimal;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name = "pedidos")
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter 
+@Setter 
+@NoArgsConstructor 
+@AllArgsConstructor 
 @Builder
-
 public class Pedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Cliente es obligatorio")
+    @NotBlank(message = "El cliente no puede estar vacío")
     private String cliente;
 
-    @NotBlank(message = "Producto es obligatorio")
+    @NotBlank(message = "El producto no puede estar vacío")
     private String producto;
 
-    @NotNull(message = "Cantidad es obligatoria")
-    @Min(value = 1, message = "Cantidad debe ser mayor a 0")
+    @NotNull
+    @Min(value = 1, message = "La cantidad debe ser al menos 1")
     private Integer cantidad;
 
-    @NotNull(message = "Total es obligatorio")
-    @DecimalMin(value = "0.01", message = "Total debe ser mayor a 0")
+    @NotNull
+    @DecimalMin(value = "0.0", message = "El total no puede ser negativo")
     private BigDecimal total;
-
-    private String estado;
-
-    private String direccion;
 }

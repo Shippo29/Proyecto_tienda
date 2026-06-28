@@ -1,0 +1,80 @@
+.page-state {
+  text-align: center;
+  padding: 48px 24px;
+  background: rgba(36, 39, 46, 0.92);
+  border-radius: 14px;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow:
+    0 4px 24px rgba(99, 102, 241, 0.1),
+    0 1.5px 0 #393e4f;
+  color: #f5f6fa;
+  transition: box-shadow 0.2s;
+}
+.page-state:hover {
+  box-shadow:
+    0 8px 32px rgba(99, 102, 241, 0.18),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.error-state {
+  background-color: #ffebee;
+  border-left: 4px solid #f44336;
+}
+
+.error-state p {
+  color: #c62828;
+  margin: 0 0 16px 0;
+  font-size: 16px;
+}
+
+.empty-state {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.btn-retry {
+  padding: 12px 22px;
+  background: linear-gradient(90deg, #6366f1 0%, #23272f 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.10);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+.btn-retry:hover {
+  background: linear-gradient(90deg, #6366f1 0%, #393e4f 100%);
+  box-shadow: 0 4px 16px rgba(99,102,241,0.18);
+  transform: translateY(-2px) scale(1.03);
+}
+

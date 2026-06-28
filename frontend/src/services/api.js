@@ -1,52 +1,65 @@
 import axios from "axios";
+import { API_BASE_URL, API_TIMEOUT, ERROR_MESSAGES } from "../utils/constants";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_GATEWAY_URL || "http://localhost:8080",
-  timeout: parseInt(import.meta.env.VITE_API_TIMEOUT || "10000", 10),
+  baseURL: API_BASE_URL,
+  timeout: API_TIMEOUT,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-// Debugging interceptors (dev only)
-api.interceptors.request.use((config) => {
-  try {
-    console.debug("FRONTEND DEBUG -> Request", {
-      method: config.method,
-      url: config.baseURL ? `${config.baseURL}${config.url}` : config.url,
-      headers: config.headers,
-      data: config.data,
-    });
-  } catch (e) {
-    console.debug("FRONTEND DEBUG -> Request (error serializing)", e);
+// Request interceptor
+api.interceptors.request.use(
+  (config) => {
+    const isDev = import.meta.env.DEV;
+    if (isDev) {
+      console.debug("🚀 API Request:", {
+        method: config.method.toUpperCase(),
+        url: `${config.baseURL}${config.url}`,
+        data: config.data,
+      });
+    }
+    return config;
+  },
+  (error) => {
+    console.error("❌ Request error:", error);
+    return Promise.reject(error);
   }
-  return config;
-});
+);
 
+// Response interceptor
 api.interceptors.response.use(
   (response) => {
-    try {
-      console.debug("FRONTEND DEBUG <- Response", {
+    const isDev = import.meta.env.DEV;
+    if (isDev) {
+      console.debug("✅ API Response:", {
         status: response.status,
         url: response.config.url,
         data: response.data,
       });
-    } catch (e) {
-      console.debug("FRONTEND DEBUG <- Response (error)", e);
     }
     return response;
   },
   (error) => {
-    try {
-      console.debug(
-        "FRONTEND DEBUG <- Response Error",
-        error &&
-          (error.response
-            ? { status: error.response.status, data: error.response.data }
-            : error.message),
-      );
-    } catch (e) {
-      console.debug("FRONTEND DEBUG <- Response Error (serializing)", e);
+    // Manejo centralizado de errores
+    let message = ERROR_MESSAGES.UNKNOWN;
+
+    if (error.response) {
+      // Error del servidor
+      console.error("Server error:", error.response.status, error.response.data);
+    } else if (error.request) {
+      // No hay respuesta del servidor
+      message = ERROR_MESSAGES.NETWORK;
+      console.error("No response from server:", error.request);
+    } else {
+      // Error en la configuración de la solicitud
+      console.error("Error:", error.message);
     }
+
+    // Re-lanzar el error para manejarlo en los servicios
     return Promise.reject(error);
-  },
+  }
 );
 
 export default api;

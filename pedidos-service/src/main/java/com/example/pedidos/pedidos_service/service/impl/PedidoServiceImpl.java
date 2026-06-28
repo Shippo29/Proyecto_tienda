@@ -1,7 +1,6 @@
 package com.example.pedidos.pedidos_service.service.impl;
 
 import com.example.pedidos.pedidos_service.events.PedidoCreadoEvent;
-import com.example.pedidos.pedidos_service.exception.ResourceNotFoundException;
 import com.example.pedidos.pedidos_service.model.Pedido;
 import com.example.pedidos.pedidos_service.repository.PedidoRepository;
 import com.example.pedidos.pedidos_service.service.PedidoService;
@@ -36,13 +35,7 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     public Pedido guardarPedido(Pedido pedido) {
-        if (pedido.getEstado() == null || pedido.getEstado().isBlank()) {
-            pedido.setEstado("PENDIENTE");
-        }
-        if (pedido.getDireccion() == null || pedido.getDireccion().isBlank()) {
-            pedido.setDireccion("Dirección pendiente");
-        }
-        log.info("PedidosService - Saving Pedido: cliente={}, producto={}, cantidad={}, total={}, estado={}, direccion={}", pedido.getCliente(), pedido.getProducto(), pedido.getCantidad(), pedido.getTotal(), pedido.getEstado(), pedido.getDireccion());
+        log.info("PedidosService - Saving Pedido: cliente={}, producto={}, cantidad={}, total={}", pedido.getCliente(), pedido.getProducto(), pedido.getCantidad(), pedido.getTotal());
 
         Pedido saved = repository.save(pedido);
 
@@ -82,27 +75,12 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public Pedido actualizarEstadoPedido(Long id, String estado, String direccion) {
-        Pedido pedidoExistente = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Pedido no encontrado"));
-        if (estado != null && !estado.isBlank()) {
-            pedidoExistente.setEstado(estado);
-        }
-        if (direccion != null && !direccion.isBlank()) {
-            pedidoExistente.setDireccion(direccion);
-        }
-        return repository.save(pedidoExistente);
-    }
-
-    @Override
     public Pedido actualizarPedido(Long id, Pedido pedido) {
 
         Pedido pedidoExistente = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Pedido no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
 
         pedidoExistente.setCliente(pedido.getCliente());
-        pedidoExistente.setProducto(pedido.getProducto());
-        pedidoExistente.setCantidad(pedido.getCantidad());
         pedidoExistente.setTotal(pedido.getTotal());
 
         return repository.save(pedidoExistente);
@@ -110,9 +88,6 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     public void eliminarPedido(Long id) {
-        if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("Pedido no encontrado");
-        }
         repository.deleteById(id);
     }
 }
