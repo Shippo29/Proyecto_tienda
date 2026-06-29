@@ -1,5 +1,3 @@
--- Datos iniciales para inventario
--- Spring Boot los inserta automáticamente al arrancar si la tabla está vacía
 
 INSERT INTO productos (nombre, precio, stock)
 SELECT 'Laptop Dell XPS', 999.99, 10
