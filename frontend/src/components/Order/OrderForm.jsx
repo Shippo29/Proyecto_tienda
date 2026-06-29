@@ -9,6 +9,7 @@ export default function OrderForm({ onSubmit, onCancel, initial = {} }) {
     producto: initial.producto || "",
     cantidad: initial.cantidad || 1,
     total: initial.total || 0,
+    direccion: initial.direccion || "",
   });
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -21,7 +22,6 @@ export default function OrderForm({ onSubmit, onCancel, initial = {} }) {
     loadProducts();
   }, []);
 
-  // Recalcular total automáticamente cuando cambia producto o cantidad
   useEffect(() => {
     if (selectedProduct) {
       const total = parseFloat(selectedProduct.precio || 0) * form.cantidad;
@@ -60,6 +60,9 @@ export default function OrderForm({ onSubmit, onCancel, initial = {} }) {
     }
     if (form.total <= 0) {
       newErrors.total = "El total debe ser mayor a 0";
+    }
+    if (!form.direccion.trim()) {
+      newErrors.direccion = "La dirección de envío es requerida";
     }
 
     setErrors(newErrors);
@@ -102,7 +105,6 @@ export default function OrderForm({ onSubmit, onCancel, initial = {} }) {
     try {
       await onSubmit(form);
     } catch (err) {
-      // El error ya lo maneja el padre; no mostramos nada extra aquí
     } finally {
       setIsSubmitting(false);
     }
@@ -184,6 +186,21 @@ export default function OrderForm({ onSubmit, onCancel, initial = {} }) {
             style={{ backgroundColor: "#f0f4f8", fontWeight: "600", color: "#2c3e50" }}
           />
         </div>
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="direccion">📍 Dirección de Envío *</label>
+        <input
+          id="direccion"
+          type="text"
+          name="direccion"
+          value={form.direccion}
+          onChange={handleChange}
+          placeholder="Ej: Av. Siempre Viva 742, Santiago"
+          className={errors.direccion ? "error" : ""}
+          required
+        />
+        {errors.direccion && <span className="error-message">{errors.direccion}</span>}
       </div>
 
       <div className="form-actions">

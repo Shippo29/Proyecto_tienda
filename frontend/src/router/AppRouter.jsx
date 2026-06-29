@@ -1,13 +1,13 @@
 import React, { Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "../components/common/Header";
-import ProductsPage from "../pages/ProductsPage";
-import CreateOrderPage from "../pages/CreateOrderPage";
-import ShipmentsPage from "../pages/ShipmentsPage";
-import OrdersPage from "../pages/OrdersPage";
+import ProtectedRoute from "../components/auth/ProtectedRoute";
+import ProductsPage     from "../pages/ProductsPage";
+import CreateOrderPage  from "../pages/CreateOrderPage";
+import ShipmentsPage    from "../pages/ShipmentsPage";
+import OrdersPage       from "../pages/OrdersPage";
 import "./AppRouter.css";
 
-// Página de error 404
 function NotFound() {
   return (
     <div className="not-found">
@@ -18,7 +18,6 @@ function NotFound() {
   );
 }
 
-// Loading fallback
 function LoadingFallback() {
   return (
     <div className="loading-fallback">
@@ -35,10 +34,32 @@ export default function AppRouter() {
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
             <Route path="/" element={<ProductsPage />} />
-            <Route path="/pedidos/new" element={<CreateOrderPage />} />
-            <Route path="/envios" element={<ShipmentsPage />} />
-            <Route path="/pedidos" element={<OrdersPage />} />
-            {/* Catch all - 404 */}
+
+            <Route
+              path="/pedidos/new"
+              element={
+                <ProtectedRoute>
+                  <CreateOrderPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/pedidos"
+              element={
+                <ProtectedRoute>
+                  <OrdersPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/envios"
+              element={
+                <ProtectedRoute>
+                  <ShipmentsPage />
+                </ProtectedRoute>
+              }
+            />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
@@ -46,4 +67,3 @@ export default function AppRouter() {
     </BrowserRouter>
   );
 }
-
