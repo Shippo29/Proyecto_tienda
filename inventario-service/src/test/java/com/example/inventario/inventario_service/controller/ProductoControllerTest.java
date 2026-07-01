@@ -1,133 +1,81 @@
 package com.example.inventario.inventario_service.controller;
 
 import com.example.inventario.inventario_service.model.Producto;
-import com.example.inventario.inventario_service.repository.ProductoRepository;
+import com.example.inventario.inventario_service.service.ProductoService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(MockitoExtension.class)
-class InventarioServiceImplTest {
+@WebMvcTest(ProductoController.class)
+class ProductoControllerTest {
 
-    @Mock
-    private ProductoRepository productoRepository;
+@Autowired
+private MockMvc mockMvc;
 
-    @InjectMocks
-    private InventarioServiceImpl inventarioService;
+@MockBean
+private ProductoService productoService;
 
-    private Producto producto;
+@Autowired
+private ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setUp() {
-        producto = Producto.builder()
-                .id(1L)
-                .nombre("Laptop Dell XPS")
-                .precio(999.99)
-                .stock(10)
-                .build();
+private Producto producto;
+
+@BeforeEach
+void setUp() {
+    producto = Producto.builder()
+        .id(1L)
+        .nombre("Laptop Dell XPS")
+        .precio(999.99)
+        .stock(10)
+        .build();
     }
 
     @Test
-    void listarProductos_debeRetornarListaDeProductos() {
+    void listarProductos_debeRetornar200ConListaDeProductos() throws Exception {
         List<Producto> productos = Arrays.asList(producto,
-                Producto.builder().id(2L).nombre("Mouse Logitech").precio(29.99).stock(50).build());
-        when(productoRepository.findAll()).thenReturn(productos);
-        List<Producto> resultado = inventarioService.listarProductos();
-        assertNotNull(resultado);
-        assertEquals(2, resultado.size());
-        assertEquals("Laptop Dell XPS", resultado.get(0).getNombre());
-        verify(productoRepository, times(1)).findAll();
+            Producto.builder().id(2L).nombre("Mouse").precio(29.99).stock(50).build());
+        when(productoService.listarProductos()).thenReturn(productos);
+
+    mockMvc.perform(get("/productos"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.length()").value(2))
+            .andExpect(jsonPath("$[0].nombre").value("Laptop Dell XPS"))
+            .andExpect(jsonPath("$[1].nombre").value("Mouse"));
     }
 
     @Test
-    void listarProductos_listaVacia_debeRetornarListaVacia() {
-        when(productoRepository.findAll()).thenReturn(List.of());
-        List<Producto> resultado = inventarioService.listarProductos();
-        assertNotNull(resultado);
-        assertTrue(resultado.isEmpty());
+    void listarProductos_sinProductos_debeRetornarListaVacia() throws Exception {
+        when(productoService.listarProductos()).thenReturn(List.of());
+
+        mockMvc.perform(get("/productos"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.length()").value(0));
     }
 
     @Test
-    void guardarProducto_debeGuardarYRetornarProducto() {
+    void guardarProducto_conDatosValidos_debeRetornar200() throws Exception {
         Producto nuevo = Producto.builder().nombre("Teclado").precio(49.99).stock(20).build();
-        when(productoRepository.save(any(Producto.class))).thenReturn(producto);
-        Producto resultado = inventarioService.guardarProducto(nuevo);
-        assertNotNull(resultado);
-        assertEquals(1L, resultado.getId());
-        assertEquals("Laptop Dell XPS", resultado.getNombre());
-        verify(productoRepository, times(1)).save(any(Producto.class));
-    }
+        when(productoService.guardarProducto(any(Producto.class))).thenReturn(producto);
 
-    @Test
-    void obtenerProductoPorId_conIdExistente_debeRetornarProducto() {
-        when(productoRepository.findById(1L)).thenReturn(Optional.of(producto));
-        Optional<Producto> resultado = inventarioService.obtenerProductoPorId(1L);
-        assertTrue(resultado.isPresent());
-        assertEquals("Laptop Dell XPS", resultado.get().getNombre());
-        assertEquals(999.99, resultado.get().getPrecio());
-        verify(productoRepository, times(1)).findById(1L);
-    }
-
-    @Test
-    void obtenerProductoPorId_conIdInexistente_debeRetornarVacio() {
-        when(productoRepository.findById(99L)).thenReturn(Optional.empty());
-        Optional<Producto> resultado = inventarioService.obtenerProductoPorId(99L);
-        assertFalse(resultado.isPresent());
-        verify(productoRepository, times(1)).findById(99L);
-    }
-
-    @Test
-    void actualizarProducto_conIdExistente_debeActualizarProducto() {
-        Producto actualizado = Producto.builder()
-                .nombre("Laptop Dell XPS Pro")
-                .precio(1299.99)
-                .stock(5)
-                .build();
-
-        Producto productoActualizado = Producto.builder()
-                .id(1L)
-                .nombre("Laptop Dell XPS Pro")
-                .precio(1299.99)
-                .stock(5)
-                .build();
-
-        when(productoRepository.findById(1L)).thenReturn(Optional.of(producto));
-        when(productoRepository.save(any(Producto.class))).thenReturn(productoActualizado);
-        Producto resultado = inventarioService.actualizarProducto(1L, actualizado);
-        assertNotNull(resultado);
-        assertEquals("Laptop Dell XPS Pro", resultado.getNombre());
-        assertEquals(1299.99, resultado.getPrecio());
-        assertEquals(5, resultado.getStock());
-        verify(productoRepository, times(1)).findById(1L);
-        verify(productoRepository, times(1)).save(any(Producto.class));
-    }
-
-    @Test
-    void actualizarProducto_conIdInexistente_debeLanzarExcepcion() {
-        Producto actualizado = Producto.builder().nombre("Nuevo").precio(100.0).stock(1).build();
-        when(productoRepository.findById(99L)).thenReturn(Optional.empty());
-        RuntimeException ex = assertThrows(RuntimeException.class,
-                () -> inventarioService.actualizarProducto(99L, actualizado));
-        assertTrue(ex.getMessage().contains("99"));
-        verify(productoRepository, times(1)).findById(99L);
-        verify(productoRepository, never()).save(any());
-    }
-
-    @Test
-    void eliminarProducto_debeInvocarDeleteById() {
-        doNothing().when(productoRepository).deleteById(1L);
-        inventarioService.eliminarProducto(1L);
-        verify(productoRepository, times(1)).deleteById(1L);
+    mockMvc.perform(post("/productos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(nuevo)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(1))
+            .andExpect(jsonPath("$.nombre").value("Laptop Dell XPS"));
     }
 }
