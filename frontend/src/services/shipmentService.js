@@ -2,9 +2,7 @@ import api from "./api";
 import { requestApi, validatePayload } from "./apiUtils";
 import { API_ENDPOINTS, ERROR_MESSAGES } from "../utils/constants";
 
-/**
- * Obtiene la lista de envíos
- */
+
 export const getShipments = async () => {
   return requestApi(
     () => api.get(API_ENDPOINTS.SHIPMENTS),
@@ -12,9 +10,6 @@ export const getShipments = async () => {
   ).then((data) => data || []);
 };
 
-/**
- * Obtiene un envío por ID
- */
 export const getShipmentById = async (id) => {
   return requestApi(
     () => api.get(`${API_ENDPOINTS.SHIPMENTS}/${id}`),
@@ -22,9 +17,7 @@ export const getShipmentById = async (id) => {
   );
 };
 
-/**
- * Crea un nuevo envío
- */
+
 export const createShipment = async (payload) => {
   validatePayload(payload, "Payload inválido");
 
@@ -38,9 +31,6 @@ export const createShipment = async (payload) => {
   );
 };
 
-/**
- * Actualiza un envío existente
- */
 export const updateShipment = async (id, payload) => {
   return requestApi(
     () => api.put(`${API_ENDPOINTS.SHIPMENTS}/${id}`, payload),
@@ -48,9 +38,6 @@ export const updateShipment = async (id, payload) => {
   );
 };
 
-/**
- * Elimina un envío
- */
 export const deleteShipment = async (id) => {
   return requestApi(
     () => api.delete(`${API_ENDPOINTS.SHIPMENTS}/${id}`),
@@ -65,4 +52,3 @@ export default {
   updateShipment,
   deleteShipment,
 };
-

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import ShipmentCard from '../../../src/components/Shipment/ShipmentCard'
 
 describe('ShipmentCard', () => {
@@ -30,18 +30,21 @@ describe('ShipmentCard', () => {
     })
 
     it('muestra estado PENDIENTE correctamente', () => {
-    render(<ShipmentCard shipment={mockShipment} />)
-    expect(screen.getByText(/Pendiente/i)).toBeInTheDocument()
+    const { container } = render(<ShipmentCard shipment={mockShipment} />)
+    const statusBadge = container.querySelector('.shipment-status')
+    expect(within(statusBadge).getByText(/Pendiente/i)).toBeInTheDocument()
     })
 
     it('muestra estado ENTREGADO correctamente', () => {
-    render(<ShipmentCard shipment={{ ...mockShipment, estado: 'ENTREGADO' }} />)
-    expect(screen.getByText(/Entregado/i)).toBeInTheDocument()
+    const { container } = render(<ShipmentCard shipment={{ ...mockShipment, estado: 'ENTREGADO' }} />)
+    const statusBadge = container.querySelector('.shipment-status')
+    expect(within(statusBadge).getByText(/Entregado/i)).toBeInTheDocument()
     })
 
     it('muestra estado EN_CAMINO correctamente', () => {
-    render(<ShipmentCard shipment={{ ...mockShipment, estado: 'EN_CAMINO' }} />)
-    expect(screen.getByText(/En tránsito/i)).toBeInTheDocument()
+    const { container } = render(<ShipmentCard shipment={{ ...mockShipment, estado: 'EN_CAMINO' }} />)
+    const statusBadge = container.querySelector('.shipment-status')
+    expect(within(statusBadge).getByText(/En tránsito/i)).toBeInTheDocument()
     })
 
     it('muestra el cliente', () => {
