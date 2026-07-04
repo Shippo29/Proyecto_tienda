@@ -21,4 +21,11 @@ public class Envio {
     private String estado;
 
     private Long pedidoId;
+
+    // Transportista asignado y ruta estimada: soporta el requisito de
+    // "mejorar la planificación de rutas y la comunicación con
+    // transportistas" del caso SmartLogix.
+    private String transportista;
+
+    private String rutaEstimada;
 }

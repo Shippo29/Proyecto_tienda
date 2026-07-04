@@ -35,14 +35,14 @@ class EnvioControllerTest {
 
     @BeforeEach
     void setUp() {
-        envio = new Envio(1L, "Av. Principal 123", "PENDIENTE", 10L);
+        envio = new Envio(1L, "Av. Principal 123", "PENDIENTE", 10L, null, null);
     }
 
     @Test
     void obtenerEnvios_debeRetornar200ConListaDeEnvios() throws Exception {
         List<Envio> envios = Arrays.asList(
                 envio,
-                new Envio(2L, "Calle 456", "ENVIADO", 11L)
+                new Envio(2L, "Calle 456", "ENVIADO", 11L, null, null)
         );
         when(envioService.obtenerEnvios()).thenReturn(envios);
         mockMvc.perform(get("/envios"))
@@ -64,7 +64,7 @@ class EnvioControllerTest {
 
     @Test
     void guardarEnvio_conDatosValidos_debeRetornar200() throws Exception {
-        Envio nuevo = new Envio(null, "Calle Nueva 789", "PENDIENTE", 20L);
+        Envio nuevo = new Envio(null, "Calle Nueva 789", "PENDIENTE", 20L, null, null);
         when(envioService.guardarEnvio(any(Envio.class))).thenReturn(envio);
         mockMvc.perform(post("/envios")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -77,8 +77,8 @@ class EnvioControllerTest {
 
     @Test
     void guardarEnvio_debeRetornarEnvioConEstado() throws Exception {
-        Envio entregado = new Envio(3L, "Calle Sur", "ENTREGADO", 30L);
-        Envio nuevo = new Envio(null, "Calle Sur", "ENTREGADO", 30L);
+        Envio entregado = new Envio(3L, "Calle Sur", "ENTREGADO", 30L, null, null);
+        Envio nuevo = new Envio(null, "Calle Sur", "ENTREGADO", 30L, null, null);
         when(envioService.guardarEnvio(any(Envio.class))).thenReturn(entregado);
         mockMvc.perform(post("/envios")
                         .contentType(MediaType.APPLICATION_JSON)

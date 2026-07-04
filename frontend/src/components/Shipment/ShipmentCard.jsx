@@ -39,7 +39,7 @@ export default function ShipmentCard({ shipment }) {
     return <div className="shipment-card error">Envío no disponible</div>;
   }
 
-  const { id, pedidoId, direccion, estado, fecha, cliente, producto, cantidad, total } = shipment;
+  const { id, pedidoId, direccion, estado, fecha, cliente, producto, cantidad, total, transportista, rutaEstimada } = shipment;
   const statusLabel = STATUS_LABELS[estado] || estado || "Desconocido";
   const statusColor = STATUS_COLORS[estado] || "#999";
   const statusIcon  = STATUS_ICON[estado]  || "📦";
@@ -61,7 +61,7 @@ export default function ShipmentCard({ shipment }) {
 
         {cliente && cliente !== "Desconocido" && (
           <div className="info-row">
-            <span className="label">👤 Cliente:</span>
+            <span className="label">🏢 Empresa:</span>
             <span className="value">{cliente}</span>
           </div>
         )}
@@ -86,6 +86,20 @@ export default function ShipmentCard({ shipment }) {
           <span className="label">📍 Dirección:</span>
           <span className="value">{direccion || "No especificada"}</span>
         </div>
+
+        {transportista && (
+          <div className="info-row">
+            <span className="label">🚛 Transportista:</span>
+            <span className="value">{transportista}</span>
+          </div>
+        )}
+
+        {rutaEstimada && (
+          <div className="info-row">
+            <span className="label">🗺️ Ruta estimada:</span>
+            <span className="value">{rutaEstimada}</span>
+          </div>
+        )}
 
         {fecha && (
           <div className="info-row">

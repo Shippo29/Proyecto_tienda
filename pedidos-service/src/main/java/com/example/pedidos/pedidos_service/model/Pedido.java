@@ -18,6 +18,10 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Empresa/PYME o punto de venta que origina el pedido dentro de SmartLogix
+    // (se mantiene el nombre de campo "cliente" por compatibilidad con el
+    // BFF y el frontend ya integrados; conceptualmente representa a quién
+    // gestiona el pedido, no a un comprador final).
     @NotBlank(message = "El cliente no puede estar vacío")
     private String cliente;
 
@@ -31,4 +35,8 @@ public class Pedido {
     @NotNull
     @DecimalMin(value = "0.0", message = "El total no puede ser negativo")
     private BigDecimal total;
+
+    // Bodega/tienda desde donde se despacha este pedido. Conecta el
+    // pedido con el módulo de inventario multi-bodega.
+    private String bodegaOrigen;
 }

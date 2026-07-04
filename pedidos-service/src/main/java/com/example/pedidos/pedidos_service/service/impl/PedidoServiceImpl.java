@@ -1,6 +1,7 @@
 package com.example.pedidos.pedidos_service.service.impl;
 
 import com.example.pedidos.pedidos_service.events.PedidoCreadoEvent;
+import com.example.pedidos.pedidos_service.factory.PedidoFactory;
 import com.example.pedidos.pedidos_service.model.Pedido;
 import com.example.pedidos.pedidos_service.repository.PedidoRepository;
 import com.example.pedidos.pedidos_service.service.PedidoService;
@@ -40,7 +41,8 @@ public class PedidoServiceImpl implements PedidoService {
         log.info("PedidosService - Saving Pedido: cliente={} producto={} cantidad={} total={}",
             pedido.getCliente(), pedido.getProducto(), pedido.getCantidad(), pedido.getTotal());
 
-        Pedido saved = repository.save(pedido);
+        Pedido nuevoPedido = PedidoFactory.crearPedido(pedido);
+        Pedido saved = repository.save(nuevoPedido);
         log.info("PedidosService - Pedido saved: id={}", saved.getId());
 
         PedidoCreadoEvent event = PedidoCreadoEvent.builder()

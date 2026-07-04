@@ -1,6 +1,6 @@
-# 🛒 Frontend - Tienda Online
+# 📦 Frontend - SmartLogix
 
-Frontend moderno y responsivo para la aplicación de comercio electrónico, construido con **React 19** y **Vite**.
+Frontend moderno y responsivo para la plataforma de gestión logística de eCommerce **SmartLogix**, construido con **React 19** y **Vite**. Permite a administradores de PYMEs gestionar inventario multi-bodega, pedidos y coordinación de envíos.
 
 ## ✨ Características
 

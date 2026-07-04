@@ -19,7 +19,7 @@ export default function ProductsPage() {
     <div className="page-wrapper">
       <PageHeader
         icon="📦"
-        title="Productos"
+        title="Inventario"
         actionLabel="🔄 Recargar"
         onAction={refetch}
         actionDisabled={loading}
