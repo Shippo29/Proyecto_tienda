@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./ShipmentCard.css";
 
 const STATUS_COLORS = {
@@ -6,10 +6,6 @@ const STATUS_COLORS = {
   EN_CAMINO:   "#2196f3",
   ENTREGADO:   "#4caf50",
   CANCELADO:   "#f44336",
-  pending:     "#ff9800",
-  in_transit:  "#2196f3",
-  delivered:   "#4caf50",
-  cancelled:   "#f44336",
 };
 
 const STATUS_LABELS = {
@@ -17,10 +13,6 @@ const STATUS_LABELS = {
   EN_CAMINO:   "En tránsito",
   ENTREGADO:   "Entregado",
   CANCELADO:   "Cancelado",
-  pending:     "Pendiente",
-  in_transit:  "En tránsito",
-  delivered:   "Entregado",
-  cancelled:   "Cancelado",
 };
 
 const STATUS_ICON = {
@@ -28,13 +20,14 @@ const STATUS_ICON = {
   EN_CAMINO:  "🚚",
   ENTREGADO:  "✅",
   CANCELADO:  "❌",
-  pending:    "🕐",
-  in_transit: "🚚",
-  delivered:  "✅",
-  cancelled:  "❌",
 };
 
-export default function ShipmentCard({ shipment }) {
+const ESTADOS_DISPONIBLES = ["PENDIENTE", "EN_CAMINO", "ENTREGADO", "CANCELADO"];
+
+export default function ShipmentCard({ shipment, onStatusChange }) {
+  const [nuevoEstado, setNuevoEstado] = useState(shipment?.estado || "PENDIENTE");
+  const [updating, setUpdating] = useState(false);
+
   if (!shipment) {
     return <div className="shipment-card error">Envío no disponible</div>;
   }
@@ -43,6 +36,16 @@ export default function ShipmentCard({ shipment }) {
   const statusLabel = STATUS_LABELS[estado] || estado || "Desconocido";
   const statusColor = STATUS_COLORS[estado] || "#999";
   const statusIcon  = STATUS_ICON[estado]  || "📦";
+
+  const handleGuardarEstado = async () => {
+    if (!onStatusChange || nuevoEstado === estado) return;
+    setUpdating(true);
+    try {
+      await onStatusChange(id, nuevoEstado);
+    } finally {
+      setUpdating(false);
+    }
+  };
 
   return (
     <div className="shipment-card">
@@ -109,16 +112,36 @@ export default function ShipmentCard({ shipment }) {
         )}
       </div>
 
+      {onStatusChange && (
+        <div className="shipment-status-editor">
+          <select
+            value={nuevoEstado}
+            onChange={(e) => setNuevoEstado(e.target.value)}
+            disabled={updating}
+          >
+            {ESTADOS_DISPONIBLES.map((e) => (
+              <option key={e} value={e}>{STATUS_LABELS[e]}</option>
+            ))}
+          </select>
+          <button
+            onClick={handleGuardarEstado}
+            disabled={updating || nuevoEstado === estado}
+          >
+            {updating ? "Guardando..." : "Guardar estado"}
+          </button>
+        </div>
+      )}
+
       <div className="shipment-timeline">
-        <div className={`timeline-item ${["ENTREGADO","delivered"].includes(estado) ? "active" : ""}`}>
+        <div className={`timeline-item ${estado === "ENTREGADO" ? "active" : ""}`}>
           <div className="timeline-dot"></div>
           <span>Entregado</span>
         </div>
-        <div className={`timeline-item ${["EN_CAMINO","in_transit"].includes(estado) ? "active" : ""}`}>
+        <div className={`timeline-item ${estado === "EN_CAMINO" ? "active" : ""}`}>
           <div className="timeline-dot"></div>
           <span>En tránsito</span>
         </div>
-        <div className={`timeline-item ${["PENDIENTE","pending"].includes(estado) ? "active" : ""}`}>
+        <div className={`timeline-item ${estado === "PENDIENTE" ? "active" : ""}`}>
           <div className="timeline-dot"></div>
           <span>Pendiente</span>
         </div>

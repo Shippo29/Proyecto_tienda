@@ -1,5 +1,5 @@
 import api from "./api";
-import { requestApi } from "./apiUtils";
+import { requestApi, validatePayload } from "./apiUtils";
 import { API_ENDPOINTS, ERROR_MESSAGES } from "../utils/constants";
 
 
@@ -18,7 +18,21 @@ export const getProductById = async (id) => {
   );
 };
 
+export const createProduct = async (payload) => {
+  validatePayload(payload, "Payload de producto inválido");
+
+  if (import.meta.env.DEV) {
+    console.debug("📦 Creating product with payload:", payload);
+  }
+
+  return requestApi(
+    () => api.post(API_ENDPOINTS.PRODUCTS, payload),
+    ERROR_MESSAGES.CREATE_PRODUCT,
+  );
+};
+
 export default {
   getProducts,
   getProductById,
+  createProduct,
 };

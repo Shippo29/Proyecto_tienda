@@ -30,4 +30,20 @@ public class EnvioServiceImpl implements EnvioService {
         log.info("EnvioService - Saved Envio id={} for pedidoId={}", saved.getId(), saved.getPedidoId());
         return saved;
     }
+
+    @Override
+    public Envio actualizarEnvio(Long id, Envio envio) {
+    Envio existente = envioRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Envío no encontrado con id " + id));
+
+    log.info("EnvioService - Actualizando envio id={} de estado={} a estado={}",
+            id, existente.getEstado(), envio.getEstado());
+
+    if (envio.getEstado() != null)        existente.setEstado(envio.getEstado());
+    if (envio.getDireccion() != null)      existente.setDireccion(envio.getDireccion());
+    if (envio.getTransportista() != null)  existente.setTransportista(envio.getTransportista());
+    if (envio.getRutaEstimada() != null)   existente.setRutaEstimada(envio.getRutaEstimada());
+
+    return envioRepository.save(existente);
+}
 }
