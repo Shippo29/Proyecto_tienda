@@ -6,7 +6,7 @@ export default function ProductCard({ product }) {
     return <div className="product-card error">Producto no disponible</div>;
   }
 
-  const { id, nombre, precio, stock, descripcion } = product;
+  const { id, nombre, sku, precio, stock, descripcion, bodegaNombre } = product;
   const isOutOfStock = stock <= 0;
 
   return (
@@ -33,7 +33,14 @@ export default function ProductCard({ product }) {
         </div>
       </div>
 
-      <div className="product-id">ID: {id}</div>
+      <div className="product-warehouse">
+        <span className="label">📍 Bodega/Tienda</span>
+        <span className="value">{bodegaNombre || "Sin asignar"}</span>
+      </div>
+
+      <div className="product-id">
+        <span>SKU: {sku || "—"}</span> <span>ID: {id}</span>
+      </div>
     </div>
   );
 }

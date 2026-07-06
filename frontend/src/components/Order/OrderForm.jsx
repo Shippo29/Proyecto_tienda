@@ -10,6 +10,7 @@ export default function OrderForm({ onSubmit, onCancel, initial = {} }) {
     cantidad: initial.cantidad || 1,
     total: initial.total || 0,
     direccion: initial.direccion || "",
+    bodegaOrigen: initial.bodegaOrigen || "",
   });
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -47,7 +48,7 @@ export default function OrderForm({ onSubmit, onCancel, initial = {} }) {
     const newErrors = {};
 
     if (!form.cliente.trim()) {
-      newErrors.cliente = "El nombre del cliente es requerido";
+      newErrors.cliente = "La empresa o punto de venta es requerido";
     }
     if (!form.producto) {
       newErrors.producto = "Debes seleccionar un producto";
@@ -81,9 +82,10 @@ export default function OrderForm({ onSubmit, onCancel, initial = {} }) {
       const product = products.find((p) => p.nombre === value);
       setSelectedProduct(product || null);
       if (!product) {
-        setForm((prev) => ({ ...prev, producto: value, total: 0 }));
+        setForm((prev) => ({ ...prev, producto: value, total: 0, bodegaOrigen: "" }));
         return;
       }
+      setForm((prev) => ({ ...prev, bodegaOrigen: product.bodegaNombre || "" }));
     }
 
     setForm((prev) => ({ ...prev, [name]: newValue }));
@@ -117,14 +119,14 @@ export default function OrderForm({ onSubmit, onCancel, initial = {} }) {
   return (
     <form onSubmit={handleSubmit} className="order-form">
       <div className="form-group">
-        <label htmlFor="cliente">Nombre del Cliente *</label>
+        <label htmlFor="cliente">Empresa / Punto de Venta *</label>
         <input
           id="cliente"
           type="text"
           name="cliente"
           value={form.cliente}
           onChange={handleChange}
-          placeholder="Ej: Juan Pérez"
+          placeholder="Ej: Tienda Providencia"
           className={errors.cliente ? "error" : ""}
           required
         />
@@ -152,6 +154,7 @@ export default function OrderForm({ onSubmit, onCancel, initial = {} }) {
         {selectedProduct && (
           <div className="product-info">
             <p>Precio unitario: ${parseFloat(selectedProduct.precio || 0).toFixed(2)}</p>
+            <p>📍 Bodega/Tienda de origen: {selectedProduct.bodegaNombre || "Sin asignar"}</p>
           </div>
         )}
       </div>
@@ -205,7 +208,7 @@ export default function OrderForm({ onSubmit, onCancel, initial = {} }) {
 
       <div className="form-actions">
         <button type="submit" disabled={isSubmitting} className="btn-primary">
-          {isSubmitting ? "Creando..." : "✅ Crear Pedido"}
+          {isSubmitting ? "Registrando..." : "✅ Registrar Pedido"}
         </button>
         {onCancel && (
           <button type="button" onClick={onCancel} className="btn-secondary" disabled={isSubmitting}>

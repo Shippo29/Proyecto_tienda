@@ -6,6 +6,7 @@ const { getStats }             = require("./services/circuitBreaker");
 const productosRouter          = require("./routes/productos");
 const pedidosRouter            = require("./routes/pedidos");
 const enviosRouter             = require("./routes/envios");
+const bodegasRouter             = require("./routes/bodegas");
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(logger);
 app.use("/productos", productosRouter);
 app.use("/pedidos",   pedidosRouter);
 app.use("/envios",    enviosRouter);
+app.use("/bodegas",   bodegasRouter);
 
 app.get("/health", (_req, res) => {
   res.json({
@@ -40,5 +42,7 @@ app.listen(PORT, () => {
   console.log("    POST /pedidos  (verifica stock antes de crear)");
   console.log("    GET  /envios   (enriquecido con datos del pedido)");
   console.log("    POST /envios");
+  console.log("    GET  /bodegas");
+  console.log("    POST /bodegas");
   console.log("================================================");
 });

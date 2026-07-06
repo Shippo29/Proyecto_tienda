@@ -56,7 +56,7 @@ export default function CreateOrderPage() {
   return (
     <div className="create-order-page">
       <div className="page-container">
-        <PageHeader icon="➕" title="Crear Nuevo Pedido" />
+        <PageHeader icon="➕" title="Registrar Nuevo Pedido" />
         <OrderForm onSubmit={handleSubmit} onCancel={handleCancel} />
       </div>
     </div>

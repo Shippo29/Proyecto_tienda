@@ -26,7 +26,7 @@ router.get("/:id", async (req, res, next) => {
 });
 
 router.post("/", async (req, res, next) => {
-  const { cliente, producto, cantidad, total } = req.body;
+  const { cliente, producto, cantidad, total, bodegaOrigen } = req.body;
   if (!cliente || !producto || !cantidad || total == null) {
     return next({
       status: 400,
@@ -58,6 +58,7 @@ router.post("/", async (req, res, next) => {
       producto,
       cantidad,
       total,
+      bodegaOrigen,
     });
 
     console.log(`[BFF/pedidos] Pedido creado con id=${pedidoCreado.id}`);

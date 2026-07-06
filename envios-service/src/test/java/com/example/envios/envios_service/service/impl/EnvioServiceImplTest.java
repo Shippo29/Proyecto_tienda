@@ -29,14 +29,14 @@ class EnvioServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        envio = new Envio(1L, "Av. Principal 123", "PENDIENTE", 10L);
+        envio = new Envio(1L, "Av. Principal 123", "PENDIENTE", 10L, null, null);
     }
 
     @Test
     void obtenerEnvios_debeRetornarListaDeEnvios() {
         List<Envio> envios = Arrays.asList(
                 envio,
-                new Envio(2L, "Calle 456", "ENVIADO", 11L)
+                new Envio(2L, "Calle 456", "ENVIADO", 11L, null, null)
         );
         when(envioRepository.findAll()).thenReturn(envios);
         List<Envio> resultado = envioService.obtenerEnvios();
@@ -57,7 +57,7 @@ class EnvioServiceImplTest {
 
     @Test
     void guardarEnvio_debeGuardarYRetornarEnvio() {
-        Envio nuevo = new Envio(null, "Calle Nueva 789", "PENDIENTE", 20L);
+        Envio nuevo = new Envio(null, "Calle Nueva 789", "PENDIENTE", 20L, null, null);
         when(envioRepository.save(any(Envio.class))).thenReturn(envio);
         Envio resultado = envioService.guardarEnvio(nuevo);
         assertNotNull(resultado);
@@ -70,8 +70,8 @@ class EnvioServiceImplTest {
 
     @Test
     void guardarEnvio_debeAsociarPedidoId() {
-        Envio nuevo = new Envio(null, "Calle Sur 100", "PENDIENTE", 42L);
-        Envio guardado = new Envio(5L, "Calle Sur 100", "PENDIENTE", 42L);
+        Envio nuevo = new Envio(null, "Calle Sur 100", "PENDIENTE", 42L, null, null);
+        Envio guardado = new Envio(5L, "Calle Sur 100", "PENDIENTE", 42L, null, null);
         when(envioRepository.save(any(Envio.class))).thenReturn(guardado);
         Envio resultado = envioService.guardarEnvio(nuevo);
         assertEquals(42L, resultado.getPedidoId());
@@ -80,8 +80,8 @@ class EnvioServiceImplTest {
 
     @Test
     void guardarEnvio_estadoEntregado_debeGuardarCorrectamente() {
-        Envio entregado = new Envio(null, "Calle Norte 50", "ENTREGADO", 30L);
-        Envio guardado  = new Envio(3L, "Calle Norte 50", "ENTREGADO", 30L);
+        Envio entregado = new Envio(null, "Calle Norte 50", "ENTREGADO", 30L, null, null);
+        Envio guardado  = new Envio(3L, "Calle Norte 50", "ENTREGADO", 30L, null, null);
         when(envioRepository.save(any(Envio.class))).thenReturn(guardado);
         Envio resultado = envioService.guardarEnvio(entregado);
         assertEquals("ENTREGADO", resultado.getEstado());

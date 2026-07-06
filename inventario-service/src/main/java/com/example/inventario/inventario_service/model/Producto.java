@@ -21,7 +21,15 @@ public class Producto {
 
     private String nombre;
 
+    private String sku;
+
     private Double precio;
 
     private Integer stock;
+
+    // Bodega/tienda donde reside este stock. Permite sincronizar
+    // inventario entre múltiples ubicaciones, tal como pide el caso.
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bodega_id")
+    private Bodega bodega;
 }

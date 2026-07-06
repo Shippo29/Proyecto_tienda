@@ -6,10 +6,13 @@ router.get("/", async (_req, res, next) => {
   try {
     const { data } = await inventarioClient.get("/productos");
     const productos = data.map((p) => ({
-      id:     p.id,
-      nombre: p.nombre,
-      precio: p.precio,
-      stock:  p.stock,
+      id:            p.id,
+      nombre:        p.nombre,
+      sku:           p.sku,
+      precio:        p.precio,
+      stock:         p.stock,
+      bodegaId:      p.bodega?.id ?? null,
+      bodegaNombre:  p.bodega?.nombre ?? "Sin asignar",
     }));
 
     res.json(productos);
@@ -33,12 +36,19 @@ router.get("/:id", async (req, res, next) => {
 });
 
 router.post("/", async (req, res, next) => {
-  const { nombre, precio, stock } = req.body;
+  const { nombre, sku, precio, stock, bodegaId } = req.body;
   if (!nombre || precio == null || stock == null) {
     return next({ status: 400, message: "Faltan campos: nombre, precio, stock" });
   }
   try {
-    const { data } = await inventarioClient.post("/productos", { nombre, precio, stock });
+    const payload = {
+      nombre,
+      sku,
+      precio,
+      stock,
+      ...(bodegaId ? { bodega: { id: bodegaId } } : {}),
+    };
+    const { data } = await inventarioClient.post("/productos", payload);
     res.status(201).json(data);
   } catch (err) {
     console.error("[BFF/productos] Error al crear producto:", err.message);

@@ -71,4 +71,19 @@ describe('ShipmentCard', () => {
     render(<ShipmentCard shipment={{ ...mockShipment, direccion: undefined }} />)
     expect(screen.getByText('No especificada')).toBeInTheDocument()
     })
+
+    it('muestra el transportista cuando existe', () => {
+    render(<ShipmentCard shipment={{ ...mockShipment, transportista: 'Chilexpress' }} />)
+    expect(screen.getByText('Chilexpress')).toBeInTheDocument()
+    })
+
+    it('no muestra fila de transportista cuando no existe', () => {
+    render(<ShipmentCard shipment={mockShipment} />)
+    expect(screen.queryByText(/Transportista/)).not.toBeInTheDocument()
+    })
+
+    it('muestra la ruta estimada cuando existe', () => {
+    render(<ShipmentCard shipment={{ ...mockShipment, rutaEstimada: 'Santiago - Valparaíso' }} />)
+    expect(screen.getByText('Santiago - Valparaíso')).toBeInTheDocument()
+    })
 })

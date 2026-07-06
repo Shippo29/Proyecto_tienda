@@ -22,14 +22,16 @@ router.get("/", async (_req, res, next) => {
     const enviosEnriquecidos = envios.map((envio) => {
       const pedido = pedidosPorId[envio.pedidoId];
       return {
-        id:        envio.id,
-        pedidoId:  envio.pedidoId,
-        direccion: envio.direccion,
-        estado:    envio.estado,
-        cliente:   pedido?.cliente  ?? "Desconocido",
-        producto:  pedido?.producto ?? "Desconocido",
-        cantidad:  pedido?.cantidad ?? null,
-        total:     pedido?.total    ?? null,
+        id:            envio.id,
+        pedidoId:      envio.pedidoId,
+        direccion:     envio.direccion,
+        estado:        envio.estado,
+        transportista: envio.transportista ?? "Sin asignar",
+        rutaEstimada:  envio.rutaEstimada ?? null,
+        cliente:       pedido?.cliente  ?? "Desconocido",
+        producto:      pedido?.producto ?? "Desconocido",
+        cantidad:      pedido?.cantidad ?? null,
+        total:         pedido?.total    ?? null,
       };
     });
 
@@ -54,7 +56,7 @@ router.get("/:id", async (req, res, next) => {
 });
 
 router.post("/", async (req, res, next) => {
-  const { pedidoId, direccion, estado } = req.body;
+  const { pedidoId, direccion, estado, transportista, rutaEstimada } = req.body;
 
   if (!pedidoId || !direccion) {
     return next({ status: 400, message: "Faltan campos: pedidoId, direccion" });
@@ -65,6 +67,8 @@ router.post("/", async (req, res, next) => {
       pedidoId,
       direccion,
       estado: estado || "PENDIENTE",
+      transportista,
+      rutaEstimada,
     });
     res.status(201).json(data);
   } catch (err) {
