@@ -1,7 +1,4 @@
-/**
- * 
- * 
- */
+
 const CircuitBreaker = require("opossum");
 
 const DEFAULT_OPTIONS = {
@@ -37,9 +34,7 @@ if (!breakers[name]) {
 return breakers[name];
 }
 
-/**
- * 
- */
+
 function getStats() {
 return Object.entries(breakers).reduce((acc, [name, cb]) => {
     acc[name] = {

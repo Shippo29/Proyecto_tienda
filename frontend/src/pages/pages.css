@@ -1,4 +1,4 @@
-/* Estilos comunes para todas las páginas */
+
 
 .page-wrapper {
   max-width: 1200px;
@@ -8,7 +8,6 @@
 }
 
 
-/* Grid responsive para listas */
 .items-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -23,7 +22,7 @@
   gap: 16px;
 }
 
-/* Elementos de lista */
+
 .order-item {
   background: rgba(36,39,46,0.98);
   border: 1.5px solid #393e4f;

@@ -77,4 +77,14 @@ describe('ProductCard', () => {
     const { container } = render(<ProductCard product={{ ...mockProduct, stock: 0 }} />)
     expect(container.firstChild).toHaveClass('out-of-stock')
     })
+
+    it('muestra $0.00 cuando el precio es undefined', () => {
+    render(<ProductCard product={{ ...mockProduct, precio: undefined }} />)
+    expect(screen.getByText('$0.00')).toBeInTheDocument()
+    })
+
+    it('muestra guion cuando el SKU no existe', () => {
+    render(<ProductCard product={{ ...mockProduct, sku: undefined }} />)
+    expect(screen.getByText('SKU: —')).toBeInTheDocument()
+    })
 })

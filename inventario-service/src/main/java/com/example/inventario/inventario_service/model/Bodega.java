@@ -20,7 +20,5 @@ public class Bodega {
 
     private String ubicacion;
 
-    // "BODEGA" o "TIENDA": permite distinguir centros de almacenamiento
-    // de puntos de venta físicos, tal como pide el caso SmartLogix.
     private String tipo;
 }

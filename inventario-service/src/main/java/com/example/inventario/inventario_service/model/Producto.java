@@ -27,8 +27,6 @@ public class Producto {
 
     private Integer stock;
 
-    // Bodega/tienda donde reside este stock. Permite sincronizar
-    // inventario entre múltiples ubicaciones, tal como pide el caso.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bodega_id")
     private Bodega bodega;

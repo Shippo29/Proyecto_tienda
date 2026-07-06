@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { getOrders, createOrder, getOrderById, deleteOrder } from '../../../src/services/orderService'
+import { getOrders, createOrder, getOrderById, deleteOrder, updateOrder } from '../../../src/services/orderService'
 import api from '../../../src/services/api'
 
 vi.mock('../../../src/services/api')
@@ -81,4 +81,23 @@ describe('deleteOrder', () => {
         expect(api.delete).toHaveBeenCalledWith('/pedidos/1')
     })
     })
+
+describe('updateOrder', () => {
+    it('actualiza un pedido correctamente', async () => {
+        const payload = { cliente: 'Juan', producto: 'Laptop', cantidad: 2, total: 1999.98 }
+        const mockResponse = { id: 1, ...payload }
+        api.put.mockResolvedValue({ data: mockResponse })
+
+        const result = await updateOrder(1, payload)
+
+        expect(result).toEqual(mockResponse)
+        expect(api.put).toHaveBeenCalledWith('/pedidos/1', payload)
+    })
+
+    it('lanza error cuando la API falla al actualizar', async () => {
+        api.put.mockRejectedValue(new Error('Server error'))
+
+        await expect(updateOrder(1, { cliente: 'Juan' })).rejects.toBeDefined()
+    })
+})
 })
