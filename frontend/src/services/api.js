@@ -9,7 +9,6 @@ const api = axios.create({
   },
 });
 
-// Request interceptor
 api.interceptors.request.use(
   (config) => {
     const isDev = import.meta.env.DEV;
@@ -28,7 +27,6 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor
 api.interceptors.response.use(
   (response) => {
     const isDev = import.meta.env.DEV;
@@ -42,22 +40,17 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Manejo centralizado de errores
     let message = ERROR_MESSAGES.UNKNOWN;
 
     if (error.response) {
-      // Error del servidor
       console.error("Server error:", error.response.status, error.response.data);
     } else if (error.request) {
-      // No hay respuesta del servidor
       message = ERROR_MESSAGES.NETWORK;
       console.error("No response from server:", error.request);
     } else {
-      // Error en la configuración de la solicitud
       console.error("Error:", error.message);
     }
 
-    // Re-lanzar el error para manejarlo en los servicios
     return Promise.reject(error);
   }
 );

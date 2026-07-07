@@ -1,10 +1,8 @@
 import api from "./api";
-import { requestApi } from "./apiUtils";
+import { requestApi, validatePayload } from "./apiUtils";
 import { API_ENDPOINTS, ERROR_MESSAGES } from "../utils/constants";
 
-/**
- * Obtiene la lista de productos
- */
+
 export const getProducts = async () => {
   return requestApi(
     () => api.get(API_ENDPOINTS.PRODUCTS),
@@ -12,9 +10,7 @@ export const getProducts = async () => {
   ).then((data) => data || []);
 };
 
-/**
- * Obtiene un producto por ID
- */
+
 export const getProductById = async (id) => {
   return requestApi(
     () => api.get(`${API_ENDPOINTS.PRODUCTS}/${id}`),
@@ -22,7 +18,21 @@ export const getProductById = async (id) => {
   );
 };
 
+export const createProduct = async (payload) => {
+  validatePayload(payload, "Payload de producto inválido");
+
+  if (import.meta.env.DEV) {
+    console.debug("📦 Creating product with payload:", payload);
+  }
+
+  return requestApi(
+    () => api.post(API_ENDPOINTS.PRODUCTS, payload),
+    ERROR_MESSAGES.CREATE_PRODUCT,
+  );
+};
+
 export default {
   getProducts,
   getProductById,
+  createProduct,
 };

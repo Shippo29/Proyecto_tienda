@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import com.example.inventario.inventario_service.repository.BodegaRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +28,9 @@ private MockMvc mockMvc;
 
 @MockBean
 private ProductoService productoService;
+
+@MockBean
+private BodegaRepository bodegaRepository;
 
 @Autowired
 private ObjectMapper objectMapper;

@@ -3,6 +3,7 @@ package com.example.pedidos.pedidos_service.service.impl;
 import com.example.pedidos.pedidos_service.events.PedidoCreadoEvent;
 import com.example.pedidos.pedidos_service.model.Pedido;
 import com.example.pedidos.pedidos_service.repository.PedidoRepository;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -86,6 +88,69 @@ class PedidoServiceImplTest {
     }
 
     @Test
+    void guardarPedido_conBodegaOrigenDefinida_debeConservarla() {
+        Pedido nuevo = Pedido.builder()
+                .cliente("Juan Perez").producto("Laptop").cantidad(1)
+                .total(new BigDecimal("999.99")).bodegaOrigen("Bodega Valparaiso").build();
+
+        Pedido guardadoConBodega = Pedido.builder()
+                .id(1L).cliente("Juan Perez").producto("Laptop").cantidad(1)
+                .total(new BigDecimal("999.99")).bodegaOrigen("Bodega Valparaiso").build();
+
+        when(repository.save(any(Pedido.class))).thenReturn(guardadoConBodega);
+        when(kafkaTemplate.send(anyString(), anyString(), any(PedidoCreadoEvent.class)))
+                .thenReturn(CompletableFuture.completedFuture(null));
+
+        Pedido resultado = pedidoService.guardarPedido(nuevo);
+
+        assertEquals("Bodega Valparaiso", resultado.getBodegaOrigen());
+    }
+
+    @Test
+    void guardarPedido_publicacionExitosa_debeCompletarSinError() {
+        Pedido nuevo = Pedido.builder()
+                .cliente("Juan Perez").producto("Laptop").cantidad(1)
+                .total(new BigDecimal("999.99")).build();
+
+        when(repository.save(any(Pedido.class))).thenReturn(pedido);
+
+        SendResult<String, PedidoCreadoEvent> sendResult = mock(SendResult.class);
+        RecordMetadata metadata = mock(RecordMetadata.class);
+        when(sendResult.getRecordMetadata()).thenReturn(metadata);
+        when(metadata.partition()).thenReturn(0);
+        when(metadata.offset()).thenReturn(1L);
+
+        when(kafkaTemplate.send(anyString(), anyString(), any(PedidoCreadoEvent.class)))
+                .thenReturn(CompletableFuture.completedFuture(sendResult));
+
+        Pedido resultado = pedidoService.guardarPedido(nuevo);
+
+        assertNotNull(resultado);
+        verify(kafkaTemplate, times(1)).send(eq("pedidos.created"), anyString(), any(PedidoCreadoEvent.class));
+    }
+
+    @Test
+    void guardarPedido_fallaAlPublicar_debeLoguearErrorSinFallarElGuardado() {
+        Pedido nuevo = Pedido.builder()
+                .cliente("Juan Perez").producto("Laptop").cantidad(1)
+                .total(new BigDecimal("999.99")).build();
+
+        when(repository.save(any(Pedido.class))).thenReturn(pedido);
+
+        CompletableFuture<SendResult<String, PedidoCreadoEvent>> futureFallido = new CompletableFuture<>();
+        futureFallido.completeExceptionally(new RuntimeException("Kafka no disponible"));
+
+        when(kafkaTemplate.send(anyString(), anyString(), any(PedidoCreadoEvent.class)))
+                .thenReturn(futureFallido);
+
+        Pedido resultado = pedidoService.guardarPedido(nuevo);
+
+        assertNotNull(resultado);
+        assertEquals(1L, resultado.getId());
+        verify(kafkaTemplate, times(1)).send(eq("pedidos.created"), anyString(), any(PedidoCreadoEvent.class));
+    }
+
+    @Test
     void obtenerPedidoPorId_conIdExistente_debeRetornarPedido() {
         when(repository.findById(1L)).thenReturn(Optional.of(pedido));
         Optional<Pedido> resultado = pedidoService.obtenerPedidoPorId(1L);
@@ -155,5 +220,13 @@ class PedidoServiceImplTest {
         Pedido resultado = pedidoService.fallbackPublicarEvento(pedido, new RuntimeException("Kafka caído"));
         assertNotNull(resultado);
         assertEquals("Juan Perez", resultado.getCliente());
+    }
+
+    @Test
+    void fallbackPublicarEvento_sinCoincidencias_debeRetornarPedidoOriginal() {
+        when(repository.findAll()).thenReturn(List.of());
+        Pedido resultado = pedidoService.fallbackPublicarEvento(pedido, new RuntimeException("Kafka caído"));
+        assertNotNull(resultado);
+        assertEquals(pedido, resultado);
     }
 }

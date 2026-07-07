@@ -21,6 +21,8 @@ export const ERROR_MESSAGES = {
   FETCH_SHIPMENTS: "Error al cargar envíos",
   CREATE_ORDER: "Error al crear pedido",
   CREATE_SHIPMENT: "Error al crear envío",
+  CREATE_PRODUCT: "Error al crear producto",  
+  UPDATE_SHIPMENT: "Error al actualizar el envío",
   NETWORK: "Error de conexión con el servidor",
   UNKNOWN: "Ocurrió un error inesperado",
 };

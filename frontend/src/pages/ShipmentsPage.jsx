@@ -1,5 +1,5 @@
 import React from "react";
-import { getShipments } from "../services/shipmentService";
+import { getShipments, updateShipment } from "../services/shipmentService";
 import ShipmentCard from "../components/Shipment/ShipmentCard";
 import PageHeader from "../components/common/PageHeader";
 import { PageStateContainer } from "../components/common/PageStates";
@@ -14,6 +14,16 @@ export default function ShipmentsPage() {
     onSuccess: () => showNotification("✅ Envíos cargados", "success", 2000),
     onError: (err) => showNotification(`❌ ${err.message}`, "error"),
   });
+
+  const handleStatusChange = async (id, nuevoEstado) => {
+    try {
+      await updateShipment(id, { estado: nuevoEstado });
+      showNotification(`✅ Envío #${id} actualizado a "${nuevoEstado}"`, "success", 2500);
+      refetch();
+    } catch (err) {
+      showNotification(`❌ ${err.message || "No se pudo actualizar el envío"}`, "error");
+    }
+  };
 
   return (
     <div className="page-wrapper">
@@ -33,11 +43,14 @@ export default function ShipmentsPage() {
       >
         <div className="items-grid">
           {shipments?.map((shipment) => (
-            <ShipmentCard key={shipment.id} shipment={shipment} />
+            <ShipmentCard
+              key={shipment.id}
+              shipment={shipment}
+              onStatusChange={handleStatusChange}
+            />
           ))}
         </div>
       </PageStateContainer>
     </div>
   );
 }
-

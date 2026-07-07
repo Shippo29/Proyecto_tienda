@@ -9,4 +9,6 @@ public interface EnvioService {
     List<Envio> obtenerEnvios();
 
     Envio guardarEnvio(Envio envio);
+
+    Envio actualizarEnvio(Long id, Envio envio); // 👈 nuevo método
 }

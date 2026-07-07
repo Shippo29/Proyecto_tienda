@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { getShipments, createShipment, getShipmentById } from '../../../src/services/shipmentService'
+import { getShipments, createShipment, getShipmentById, updateShipment, deleteShipment } from '../../../src/services/shipmentService'
 import api from '../../../src/services/api'
 
 vi.mock('../../../src/services/api')
@@ -69,6 +69,41 @@ describe('getShipmentById', () => {
 
         expect(result).toEqual(mockShipment)
         expect(api.get).toHaveBeenCalledWith('/envios/1')
+    })
+})
+
+describe('updateShipment', () => {
+    it('actualiza un envio correctamente', async () => {
+        const payload = { pedidoId: 10, direccion: 'Av. 123', estado: 'EN_CAMINO' }
+        const mockResponse = { id: 1, ...payload }
+        api.put.mockResolvedValue({ data: mockResponse })
+
+        const result = await updateShipment(1, payload)
+
+        expect(result).toEqual(mockResponse)
+        expect(api.put).toHaveBeenCalledWith('/envios/1', payload)
+    })
+
+    it('lanza error cuando la API falla al actualizar', async () => {
+        api.put.mockRejectedValue(new Error('Server error'))
+
+        await expect(updateShipment(1, { estado: 'ENTREGADO' })).rejects.toBeDefined()
+    })
+})
+
+describe('deleteShipment', () => {
+    it('elimina un envio correctamente', async () => {
+        api.delete.mockResolvedValue({ data: null })
+
+        await deleteShipment(1)
+
+        expect(api.delete).toHaveBeenCalledWith('/envios/1')
+    })
+
+    it('lanza error cuando la API falla al eliminar', async () => {
+        api.delete.mockRejectedValue(new Error('Server error'))
+
+        await expect(deleteShipment(1)).rejects.toBeDefined()
     })
 })
 })

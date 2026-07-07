@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 
 /**
- * Hook para manejar llamadas asincrónicas
- * @param {Function} asyncFunction - Función asincrónica a ejecutar
- * @param {boolean} immediate - Si se debe ejecutar inmediatamente (default: true)
+ * 
+ * @param {Function} asyncFunction - 
+ * @param {boolean} immediate - 
  */
 export function useAsync(asyncFunction, immediate = true) {
   const [status, setStatus] = useState("idle");

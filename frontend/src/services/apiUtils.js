@@ -5,7 +5,6 @@ export async function requestApi(fn, errorMessage) {
     const response = await fn();
     return response.data;
   } catch (error) {
-    // Intentar extraer el mensaje real del servidor
     const serverMessage =
       error?.response?.data?.message ||
       error?.response?.data?.error ||

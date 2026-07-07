@@ -1,5 +1,6 @@
 package com.example.inventario.inventario_service.controller;
 
+import com.example.inventario.inventario_service.dto.BodegaDTO;
 import com.example.inventario.inventario_service.model.Bodega;
 import com.example.inventario.inventario_service.repository.BodegaRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +20,17 @@ public class BodegaController {
     }
 
     @GetMapping
-    public List<Bodega> listarBodegas() {
+    public List<BodegaDTO> listarBodegas() {
         log.debug("BodegaController - GET /bodegas");
-        return bodegaRepository.findAll();
+        return bodegaRepository.findAll()
+                .stream()
+                .map(BodegaDTO::fromEntity)
+                .toList();
     }
 
     @PostMapping
-    public Bodega guardarBodega(@RequestBody Bodega bodega) {
+    public BodegaDTO guardarBodega(@RequestBody Bodega bodega) {
         log.debug("BodegaController - POST /bodegas body: nombre={} tipo={}", bodega.getNombre(), bodega.getTipo());
-        return bodegaRepository.save(bodega);
+        return BodegaDTO.fromEntity(bodegaRepository.save(bodega));
     }
 }

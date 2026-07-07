@@ -2,9 +2,7 @@ import api from "./api";
 import { requestApi, validatePayload } from "./apiUtils";
 import { API_ENDPOINTS, ERROR_MESSAGES } from "../utils/constants";
 
-/**
- * Obtiene la lista de pedidos
- */
+
 export const getOrders = async () => {
   return requestApi(
     () => api.get(API_ENDPOINTS.ORDERS),
@@ -12,9 +10,7 @@ export const getOrders = async () => {
   ).then((data) => data || []);
 };
 
-/**
- * Obtiene un pedido por ID
- */
+
 export const getOrderById = async (id) => {
   return requestApi(
     () => api.get(`${API_ENDPOINTS.ORDERS}/${id}`),
@@ -22,9 +18,7 @@ export const getOrderById = async (id) => {
   );
 };
 
-/**
- * Crea un nuevo pedido
- */
+
 export const createOrder = async (payload) => {
   validatePayload(payload, "Payload inválido");
 
@@ -48,9 +42,7 @@ export const updateOrder = async (id, payload) => {
   );
 };
 
-/**
- * Elimina un pedido
- */
+
 export const deleteOrder = async (id) => {
   return requestApi(
     () => api.delete(`${API_ENDPOINTS.ORDERS}/${id}`),

@@ -1,6 +1,7 @@
 package com.example.inventario.inventario_service.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,6 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 
 public class Producto {
 
@@ -27,8 +29,6 @@ public class Producto {
 
     private Integer stock;
 
-    // Bodega/tienda donde reside este stock. Permite sincronizar
-    // inventario entre múltiples ubicaciones, tal como pide el caso.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bodega_id")
     private Bodega bodega;

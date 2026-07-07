@@ -86,4 +86,27 @@ describe('ShipmentCard', () => {
     render(<ShipmentCard shipment={{ ...mockShipment, rutaEstimada: 'Santiago - Valparaíso' }} />)
     expect(screen.getByText('Santiago - Valparaíso')).toBeInTheDocument()
     })
+
+    it('usa valores por defecto cuando el estado no esta en el mapa', () => {
+    const { container } = render(<ShipmentCard shipment={{ ...mockShipment, estado: 'ESTADO_RARO' }} />)
+    const statusBadge = container.querySelector('.shipment-status')
+    expect(within(statusBadge).getByText(/ESTADO_RARO/)).toBeInTheDocument()
+    expect(statusBadge).toHaveStyle({ backgroundColor: '#999' })
+    })
+
+    it('muestra Desconocido cuando no hay estado', () => {
+    const { container } = render(<ShipmentCard shipment={{ ...mockShipment, estado: undefined }} />)
+    const statusBadge = container.querySelector('.shipment-status')
+    expect(within(statusBadge).getByText(/Desconocido/)).toBeInTheDocument()
+    })
+
+    it('muestra el producto sin cantidad cuando esta no existe', () => {
+    render(<ShipmentCard shipment={{ ...mockShipment, cantidad: undefined }} />)
+    expect(screen.getByText('Laptop Dell')).toBeInTheDocument()
+    })
+
+    it('muestra la fecha formateada cuando existe', () => {
+    render(<ShipmentCard shipment={{ ...mockShipment, fecha: '2024-05-10' }} />)
+    expect(screen.getByText(/2024|10\/5|5\/10/)).toBeInTheDocument()
+    })
 })

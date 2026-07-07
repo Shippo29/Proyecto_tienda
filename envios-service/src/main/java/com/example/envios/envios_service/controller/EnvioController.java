@@ -30,4 +30,10 @@ public class EnvioController {
         log.debug("EnvioController - POST /envios body: pedidoId={} direccion={} estado={} ", envio.getPedidoId(), envio.getDireccion(), envio.getEstado());
         return envioService.guardarEnvio(envio);
     }
+
+    @PutMapping("/{id}")
+    public Envio actualizarEnvio(@PathVariable Long id, @RequestBody Envio envio) {
+    log.debug("EnvioController - PUT /envios/{} nuevo estado={}", id, envio.getEstado());
+    return envioService.actualizarEnvio(id, envio);
+}
 }
